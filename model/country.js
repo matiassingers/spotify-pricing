@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
+var settings = require('../core/settings');
 
-mongoose.connect('mongodb://localhost/spotify');
+mongoose.connect(settings.mongo);
 var Country = mongoose.model('Country', {
   title: String,
   link: String,
