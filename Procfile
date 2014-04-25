@@ -1,1 +1,2 @@
-web: node scraper.js
+web: node index.js
+worker: node scraper.js
