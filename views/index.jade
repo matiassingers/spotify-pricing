@@ -1,0 +1,19 @@
+h1 Spotify pricing
+
+table
+    thead
+        tr
+            td
+            td
+            td Price
+            td Currency
+            td Converted
+
+    tbody
+        each country in data
+            tr
+                td= country.title
+                td= country.originalRel
+                td= country.price
+                td= country.currency
+                td= country.convertedPrice
