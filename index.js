@@ -1,6 +1,6 @@
 var express = require('express');
 var Country = require('./model/country.js');
-var settings = require('../core/settings');
+var settings = require('./core/settings');
 
 var app = express();
 app.set('views', __dirname + '/views');
