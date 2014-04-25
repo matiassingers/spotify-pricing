@@ -146,6 +146,11 @@ function convertPriceToUSD(country){
     }
     var converted = money.convert(country.price, {from: country.currency, to: 'USD'});
 
+    if(converted === 'fx error'){
+      console.log(country.currency);
+      reject('Couldn\'t convert the price for: ' + country.title + '(' + country.currency + ')');
+    }
+
     country.convertedPrice = converted;
     resolve(country);
   });
