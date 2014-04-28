@@ -8,6 +8,12 @@ var Country = mongoose.model('Country', {
   originalRel: String,
   rel: String,
   currency: String,
+  originalCurrency: String,
+  countryCode: String,
+  internationalName: String,
+  region: String,
+  subRegion: String,
+  demonym: String,
   originalPrice: String,
   price: Number,
   convertedPrice: Number
