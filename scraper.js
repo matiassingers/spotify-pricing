@@ -1,13 +1,37 @@
 var _ = require('lodash');
 var when = require('when');
 var spotify = require('spotify-crawler');
+var request = require('promise-request');
 
 var Country = require('./model/country');
 
 
 spotify.fetch()
+  .then(getGDPData)
   .then(saveCountries)
   .catch(console.log);
+
+
+function getGDPData(countries){
+  // GDP per capita, PPP (current international $) - 2008
+  var url = "http://api.worldbank.org/countries/all/indicators/NY.GDP.PCAP.PP.CD?format=json&date=2009:2009&per_page=300";
+
+  return request(url, true)
+    .then(function(data){
+      var results = data[1];
+
+      _.each(results, function(result){
+        var country = _.find(countries, function(country){
+          return country.rel === result.country.id.toLocaleLowerCase();
+        });
+
+        if(country)
+          country.gdp = result.value;
+      });
+
+      return countries;
+    });
+}
 
 function saveCountries(countries){
   console.log('Inserting {0} countries in DB'.format(countries.length));

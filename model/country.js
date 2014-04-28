@@ -17,7 +17,8 @@ var Country = mongoose.model('Country', {
   demonym: String,
   originalPrice: String,
   price: Number,
-  convertedPrice: Number
+  convertedPrice: Number,
+  gdp: Number,
 });
 
 module.exports = Country;
