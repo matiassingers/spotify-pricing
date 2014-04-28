@@ -5,6 +5,7 @@ var settings = core.settings;
 
 var app = express();
 app.set('views', __dirname + '/views');
+app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'jade');
 
 app.get('/api/', function(req, res){
