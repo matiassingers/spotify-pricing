@@ -1,6 +1,7 @@
 var express = require('express');
-var Country = require('./model/country.js');
-var settings = require('./core/settings');
+var Country = require('./model/country');
+var core = require('./core/base');
+var settings = core.settings;
 
 var app = express();
 app.set('views', __dirname + '/views');
@@ -36,4 +37,4 @@ function getItems(callback){
 }
 
 app.listen(settings.port);
-console.log('Listening on port ' + settings.port + '...');
+console.log('Listening on port {0}...'.format(settings.port));
