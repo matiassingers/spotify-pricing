@@ -22,7 +22,7 @@ function getGDPData(countries){
 
       _.each(results, function(result){
         var country = _.find(countries, function(country){
-          return country.rel === result.country.id.toLocaleLowerCase();
+          return country.rel === result.country.id.toLowerCase();
         });
 
         if(country)
