@@ -135,11 +135,8 @@
     </div>
 
     <script>
-        function calculateHeight(){
-            var height = 270 / 649 * window.innerWidth;
-
-            return height;
-        }
+        var countries;
+        var base;
 
         var container = d3.select(".container");
 
@@ -152,25 +149,6 @@
                 width = width - margin.left - margin.right,
                 mapRatio = 1.25,
                 height = width * mapRatio - margin.top - margin.bottom;
-
-        var x = d3.scale.linear()
-                .range([margin.left, width + margin.left])
-
-        var y = d3.scale.ordinal()
-                .rangeRoundBands([0, height], .3);
-
-        var xAxis = d3.svg.axis()
-                .scale(x)
-                .orient("bottom")
-                .tickFormat(function(d){ return d + "%" })
-                .tickSize(height);
-
-        container.append("p")
-                .html("Local currency under / over valuation against the dollar, %");
-
-        var svg = container.append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom);
 
         function fetchJSONFile(path, callback) {
             var httpRequest = new XMLHttpRequest();
@@ -185,12 +163,16 @@
             httpRequest.open('GET', path);
             httpRequest.send();
         }
-        fetchJSONFile('/api/', function(countries){
-            var base = _.find(countries, {'rel': 'us'});
+        fetchJSONFile('/api/', formatData);
+
+        function formatData(data){
+            countries = data;
+
+            base = _.find(countries, {'rel': 'us'});
 
             countries = _.chain(countries)
-                    .reverse()
                     .unique("rel")
+                    .reverse()
                     .map(function(country){
                         country.title = country.title.replace(/ \([^)]*\)/, '');
 
@@ -205,6 +187,116 @@
                         return country;
                     })
                     .value();
+
+            drawMap();
+            drawBarChart();
+        }
+
+        function drawMap(){
+            var baseColor = "rgba(133, 187, 35, 1)";
+            var ratio = 20;
+            var fills = {
+                LOWEST: tinycolor.lighten(baseColor, ratio).toHexString(),
+                LOW: tinycolor.lighten(baseColor, ratio/2).toHexString(),
+                AVERAGE: tinycolor(baseColor).toHexString(),
+                HIGH: tinycolor.darken(baseColor, ratio/2).toHexString(),
+                HIGHEST: tinycolor.darken(baseColor, ratio).toHexString(),
+                defaultFill: 'rgba(255, 255, 255, .1)'
+            };
+
+            var map = new Datamap({
+                element: document.getElementById('map'),
+                fills: fills,
+                projection: 'equirectangular', //"mercator"/"equirectangular"
+                done: updateMapColors,
+                disableDefaultStyles: true,
+                geographyConfig: {
+                    hideAntarctica: true,
+                    borderWidth: 0,
+                    popupTemplate: function(geography, data) {
+                        if(!data)
+                            return;
+
+                        return '<div class="hoverinfo"><strong>' + data.internationalName + ':</strong> $' + data.convertedPrice + '</div>';
+                    },
+                    popupOnHover: true,
+                    highlightOnHover: true,
+                    highlightFillColor: function(geography, data){
+                        if(!data)
+                            return fills.defaultFill;
+
+                        return 'rgba(255, 255, 255, .9)';
+                    },
+                    highlightBorderWidth: 0
+                }
+            });
+
+            map.legend();
+        }
+        function updateMapColors(map){
+            var sortedDifferences = _.map(_.sortBy(countries, 'priceDifference'), function(country){
+                return country.priceDifference;
+            });
+            console.log(sortedDifferences);
+            var quantile = [
+                d3.quantile(sortedDifferences, 0.2),
+                d3.quantile(sortedDifferences, 0.4),
+                d3.quantile(sortedDifferences, 0.6),
+                d3.quantile(sortedDifferences, 0.8)
+            ];
+            var update = {};
+            _.each(countries, function(country){
+                update[country.countryCode] = {
+                    fillKey: calculateColor(country.priceDifference),
+                    internationalName: country.internationalName,
+                    priceDifference: country.formattedPriceDifference,
+                    convertedPrice: country.formattedConvertedPrice
+                };
+            });
+            setTimeout(function(){
+                map.updateChoropleth(update);
+            }, 100);
+
+            function calculateColor(diff){
+                var color;
+                if(diff <= quantile[0])
+                    color = 'LOWEST';
+
+                if(diff > quantile[0])
+                    color = 'LOW';
+
+                if(diff > quantile[1] && diff < quantile[2])
+                    color = 'AVERAGE';
+
+                if(diff > quantile[2])
+                    color = 'HIGH';
+
+                if(diff >= quantile[3])
+                    color = 'HIGHEST';
+
+                return color;
+            }
+        }
+
+        function drawBarChart(){
+            var x = d3.scale.linear()
+                    .range([margin.left, width + margin.left])
+
+            var y = d3.scale.ordinal()
+                    .rangeRoundBands([0, height], .3);
+
+            var xAxis = d3.svg.axis()
+                    .scale(x)
+                    .orient("bottom")
+                    .tickFormat(function(d){ return d + "%" })
+                    .tickSize(height);
+
+            container.append("p")
+                    .html("Local currency under / over valuation against the dollar, %");
+
+            var svg = container.append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom);
 
             x.domain(d3.extent(countries, function(d) { return d.priceDifference; })).nice();
             y.domain(countries.map(function(d) { return d.internationalName; }));
@@ -270,89 +362,13 @@
             function getBoundaryWidth(elements){
                 return elements.node().getBBox().width;
             }
+        };
 
-
-            var baseColor = "rgba(133, 187, 35, 1)";
-            var ratio = 20;
-            var fills = {
-                LOWEST: tinycolor.lighten(baseColor, ratio).toHexString(),
-                LOW: tinycolor.lighten(baseColor, ratio/2).toHexString(),
-                AVERAGE: tinycolor(baseColor).toHexString(),
-                HIGH: tinycolor.darken(baseColor, ratio/2).toHexString(),
-                HIGHEST: tinycolor.darken(baseColor, ratio).toHexString(),
-                defaultFill: 'rgba(255, 255, 255, .1)'
-            };
-
-            var map = new Datamap({
-                element: document.getElementById('map'),
-                fills: fills,
-                projection: 'equirectangular', //"mercator"/"equirectangular"
-                done: updateMapColors,
-                disableDefaultStyles: true,
-                geographyConfig: {
-                    hideAntarctica: true,
-                    borderWidth: 0,
-                    popupTemplate: function(geography, data) {
-                        if(!data)
-                            return;
-
-                        return '<div class="hoverinfo"><strong>' + data.internationalName + ':</strong> $' + data.convertedPrice + '</div>';
-                    },
-                    popupOnHover: true,
-                    highlightOnHover: true,
-                    highlightFillColor: function(geography, data){
-                        if(!data)
-                            return fills.defaultFill;
-
-                        return 'rgba(255, 255, 255, .9)';
-                    },
-                    highlightBorderWidth: 0
-                }
-            });
-
-            map.legend();
-
-            function updateMapColors(map){
-                var sortedDifferences = _.map(_.sortBy(countries, 'priceDifference'), function(country){
-                    return country.priceDifference;
-                });
-                var quantile = [
-                    d3.quantile(sortedDifferences, 0.2),
-                    d3.quantile(sortedDifferences, 0.4),
-                    d3.quantile(sortedDifferences, 0.6),
-                    d3.quantile(sortedDifferences, 0.8)
-                ];
-                var update = {};
-                _.each(countries, function(country){
-                    update[country.countryCode] = {
-                        fillKey: calculateColor(country.priceDifference),
-                        internationalName: country.internationalName,
-                        priceDifference: country.formattedPriceDifference,
-                        convertedPrice: country.formattedConvertedPrice
-                    };
-                });
-                map.updateChoropleth(update);
-
-                function calculateColor(diff){
-                    var color;
-                    if(diff <= quantile[0])
-                        color = 'LOWEST';
-
-                    if(diff > quantile[0])
-                        color = 'LOW';
-
-                    if(diff > quantile[1] && diff < quantile[2])
-                        color = 'AVERAGE';
-
-                    if(diff > quantile[2])
-                        color = 'HIGH';
-
-                    if(diff >= quantile[3])
-                        color = 'HIGHEST';
-
-                    return color;
-                }
-            }
-        });
+        function calculateHeight(){
+            return 270 / 649 * window.innerWidth;
+        }
+        function calculateWidth(){
+            return 649 / 270 * window.innerHeight;
+        }
     </script>
 </body>
