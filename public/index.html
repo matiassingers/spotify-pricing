@@ -159,6 +159,10 @@
         stroke: rgb(145, 43, 13);
         stroke-width: 2;
     }
+    .scatter-hover {
+        position: absolute;
+        z-index: 1000;
+    }
 </style>
 <script src="/js/d3.v3.min.js"></script>
 <script src="/js/topojson.v1.min.js"></script>
@@ -424,10 +428,19 @@
                     .domain([0, d3.max(data, function(d) { return d.convertedPrice; })]).nice()
                     .range([ height/2, margin.top ]);
 
-            var chart = container.append('svg:svg')
+            var scatterContainer = container.append("div")
+                    .attr("id", "scatter-plot")
+                    .attr("style", "position: relative; width: auto;");
+
+            // Scatter plot hover
+            scatterContainer.append('div')
+                    .attr('class', 'scatter-hover');
+
+            var chart = scatterContainer.append('svg:svg')
                     .attr('width', width + margin.right + margin.left)
                     .attr('height', height/2 + margin.top + margin.bottom)
                     .attr('class', 'chart')
+                    .attr('style', 'position: relative');
 
             var main = chart.append('g')
                     .attr('width', width)
@@ -460,7 +473,10 @@
                     .attr("cx", function (d,i) { if(d) return x(d.gdp); } )
                     .attr("cy", function (d) { if(d) return y(d.convertedPrice); } )
                     .attr("r", 8)
-                    .attr("attr", function (d) { return d.countryCode.toLowerCase(); });
+                    .attr("attr", function (d) { return d.countryCode.toLowerCase(); })
+                    .attr("data-info", function (d) { return JSON.stringify(d); })
+                    .on("mousemove", updateScatterPopup)
+                    .on("mouseout", removeScatterPopup);
 
             var trendData = getTrendlineData(data, main);
             var trendline = main.selectAll(".trendline")
@@ -472,6 +488,28 @@
                     .attr("y1", function(d) { return y(d[1]); })
                     .attr("x2", function(d) { return x(d[2]); })
                     .attr("y2", function(d) { return y(d[3]); });
+
+            function updateScatterPopup(){
+                var position = d3.mouse(this);
+                var element = d3.select(this);
+
+                scatterContainer.select('.scatter-hover')
+                        .style('top', ( (position[1] + 15)) + "px")
+                        .html(function() {
+                            console.log(element);
+                            var data = JSON.parse(element.attr('data-info'));
+                            return scatterPopupHTML(data);
+                        })
+                        .style('left', ( position[0] + 10) + "px")
+                        .style('display', 'block');
+            }
+            function removeScatterPopup(){
+                scatterContainer.select('.scatter-hover')
+                        .style('display', 'none');
+            }
+            function scatterPopupHTML(data){
+                return "<div class='hoverinfo'><strong>" + data.internationalName + ":</strong><br>Converted price: $" + data.formattedConvertedPrice + "<br>GDP: $" + data.gdp.toFixed(2) + "</div>";
+            }
         }
         function getTrendlineData(data, chart){
             // get the x and y values for least squares
