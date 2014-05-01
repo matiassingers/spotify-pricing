@@ -417,7 +417,7 @@
                     .attr("y", height)
                     .attr("text-anchor", "left")
                     .text("Spotify Premium price*, $");
-            priceDefinition.attr("transform", function(d) { return "translate(-" + (getBoundaryWidth(priceDefinition) + margin.right/2) + ", -" + getBoundaryHeight(priceDefinition) + ")"; });
+            priceDefinition.attr("transform", function(d) { return "translate(-" + (getBoundaryWidth(priceDefinition) + margin.right/2) + ", -" + (getBoundaryHeight(priceDefinition) - 2) + ")"; });
 
             function getBoundaryHeight(elements){
                 return elements.node().getBBox().height;
