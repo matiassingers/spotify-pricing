@@ -81,11 +81,20 @@
         stroke: rgb(145, 43, 13);
     }
 
+    text.label {
+        font-weight: 100;
+    }
+
     text.nil {
         font-family: serif;
         font-style: italic;
         font-weight: normal;
         text-transform: none;
+    }
+
+    text.price {
+        font-family: monospace;
+        text-align: right;
     }
 
     /* Map styling */
@@ -407,8 +416,13 @@
                     .attr("class", "price")
                     .attr("x", width + margin.left + margin.right)
                     .attr("y", function(d) { return y(d.internationalName); })
-                    .attr("text-anchor", "left")
-                    .text(function(d) { return d.formattedConvertedPrice; });
+                    .html(function(d) {
+                        if(d.formattedConvertedPrice.length === 4) {
+                            var price = "&nbsp;" + d.formattedConvertedPrice;
+                        }
+
+                        return price || d.formattedConvertedPrice;
+                    });
             prices.attr("transform", function(d) { return "translate(-" + getBoundaryWidth(prices) + ", " + (y.rangeBand()/2 + getBoundaryHeight(prices)/4) + ")"; });
 
             var priceDefinition = svg.append("svg:text")
