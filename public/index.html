@@ -521,11 +521,18 @@
                 outer: height / 6 + margin.top + margin.bottom
             };
 
+            margin = {
+                top: 10,
+                right: 30,
+                bottom: 0,
+                left: 25
+            };
+
             var data = _.remove(countries, function(country) { return !!country.gdp; });
 
             var x = d3.scale.linear()
                     .domain([0, d3.max(data, function(d) { return d.gdp; })]).nice()
-                    .range([margin.left, scatterWidth.inner + margin.right]);
+                    .range([margin.left, scatterWidth.outer - margin.right]);
 
             var y = d3.scale.linear()
                     .domain([0, d3.max(data, function(d) { return d.convertedPrice; })]).nice()
@@ -542,16 +549,12 @@
                     .attr('height', scatterHeight.outer)
                     .attr('style', 'position: relative');
 
-            var main = chart.append('g')
-                    .attr('width', scatterWidth.inner)
-                    .attr('height', scatterHeight.inner)
-
             // draw the x axis
             var xAxis = d3.svg.axis()
                     .scale(x)
                     .orient('bottom');
 
-            main.append('g')
+            chart.append('g')
                     .attr('transform', 'translate(0,' + scatterHeight.inner + ')')
                     .attr('class', 'main axis date')
                     .call(xAxis);
@@ -561,12 +564,12 @@
                     .scale(y)
                     .orient('left');
 
-            main.append('g')
+            chart.append('g')
                     .attr('transform', 'translate(' + margin.left + ', 0)')
                     .attr('class', 'main axis date')
                     .call(yAxis);
 
-            var g = main.append("svg:g");
+            var g = chart.append("svg:g");
             g.selectAll("scatter-dots")
                     .data(data)
                     .enter().append("svg:circle")
@@ -578,8 +581,8 @@
                     .on("mousemove", updateScatterPopup)
                     .on("mouseout", removeScatterPopup);
 
-            var trendData = getTrendlineData(data, main);
-            var trendline = main.selectAll(".trendline")
+            var trendData = getTrendlineData(data, chart);
+            var trendline = chart.selectAll(".trendline")
                     .data(trendData)
                     .enter()
                     .append("line")
