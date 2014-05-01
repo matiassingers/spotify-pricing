@@ -47,16 +47,34 @@
         }
     }
 
-    h2 {
+    h2, h3 {
         margin: 0;
-        margin-bottom: 5px;
         padding-bottom: 10px;
         color: rgb(136, 137, 140);
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 15px;
         font-weight: 200;
         text-transform: uppercase;
+    }
+
+    h2, .country-chooser {
+        margin-bottom: 5px;
         border-bottom: 1px solid rgb(34, 35, 38);
+    }
+
+    .country-chooser h3 {
+        display: inline-block;
+        padding: 0 10px 10px;
+        cursor: pointer;
+    }
+
+    .country-chooser h3:first-child {
+        padding-left: 0;
+        cursor: auto;
+    }
+
+    .country-chooser h3.active {
+        border-bottom: 2px solid rgb(132, 189, 0);
     }
 
     .bar, circle {
@@ -205,6 +223,15 @@
         padding-bottom: 25px;
     }
 
+    /* Country filtering */
+    svg.filter .bar {
+        opacity: 0.2
+    }
+
+    svg.filter.europe .europe, svg.filter.americas .americas, svg.filter.asia .asia, svg.filter.oceania .oceania {
+        opacity: 1;
+    }
+
 </style>
 <script src="/js/d3.v3.min.js"></script>
 <script src="/js/topojson.v1.min.js"></script>
@@ -218,7 +245,14 @@
 
         <div id="map" class="chart"></div>
         <div id="bar-chart" class="chart">
-            <h2>Converted price index</h2>
+            <div class="country-chooser">
+                <h3>Converted price index:</h3>
+                <h3 class="active">All</h3>
+                <h3>Europe</h3>
+                <h3>Americas</h3>
+                <h3>Asia</h3>
+                <h3>Oceania</h3>
+            </div>
         </div>
         <div id="scatter-plot" class="chart">
             <h2>GDP/capita & converted price comparison</h2>
@@ -539,7 +573,7 @@
                     .attr("cx", function (d,i) { if(d) return x(d.gdp); } )
                     .attr("cy", function (d) { if(d) return y(d.convertedPrice); } )
                     .attr("r", 8)
-                    .attr("attr", function (d) { return d.countryCode.toLowerCase(); })
+                    .attr("class", function (d) { return d.class })
                     .attr("data-info", function (d) { return JSON.stringify(d); })
                     .on("mousemove", updateScatterPopup)
                     .on("mouseout", removeScatterPopup);
@@ -622,5 +656,28 @@
         function calculateWidth(){
             return 649 / 270 * window.innerHeight;
         }
+
+
+        d3.selectAll(".country-chooser h3")
+                .on('click', function(d, id){
+                    if(id === 0)
+                        return;
+
+                    d3.selectAll(".country-chooser h3.active")
+                            .classed("active", false);
+
+                    var element = d3.select(this)
+                            .classed("active", true);
+
+                    var chart = d3.select("#bar-chart svg");
+                    var scatter = d3.select("#scatter-plot svg");
+                    if(id === 1){
+                        chart.attr("class", "");
+                        scatter.attr("class", "");
+                    } else {
+                        chart.attr("class", "filter " + element.text().toLowerCase());
+                        scatter.attr("class", "filter " + element.text().toLowerCase());
+                    }
+                });
     </script>
 </body>
