@@ -184,8 +184,16 @@
         var margin = {top: 10, right: 75, bottom: 10, left: 150},
                 width = parseInt(mapElement.style('width')),
                 width = width - margin.left - margin.right,
-                mapRatio = 1.25,
+                mapRatio = 1.5,
                 height = width * mapRatio - margin.top - margin.bottom;
+
+        if(height < 500) {
+            console.log(margin);
+            margin.left = 75;
+            margin.right = 40;
+            width = parseInt(mapElement.style('width')) - margin.left - margin.right;
+            height = 650;
+        }
 
         function fetchJSONFile(path, callback) {
             var httpRequest = new XMLHttpRequest();
@@ -403,6 +411,9 @@
         };
 
         function drawScatterPlot(){
+            if(width < 400)
+                return;
+            
             var data = _.remove(countries, function(country) { return !!country.gdp; });
 
             var x = d3.scale.linear()
