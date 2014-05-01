@@ -496,7 +496,6 @@
                 scatterContainer.select('.scatter-hover')
                         .style('top', ( (position[1] + 15)) + "px")
                         .html(function() {
-                            console.log(element);
                             var data = JSON.parse(element.attr('data-info'));
                             return scatterPopupHTML(data);
                         })
