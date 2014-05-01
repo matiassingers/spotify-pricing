@@ -518,7 +518,7 @@
                         .style('display', 'none');
             }
             function scatterPopupHTML(data){
-                return "<div class='hoverinfo'><strong>" + data.internationalName + ":</strong><br>Converted price: $" + data.formattedConvertedPrice + "<br>GDP: $" + data.gdp.toFixed(2) + "</div>";
+                return "<div class='hoverinfo'><strong>" + data.internationalName + ":</strong><br>Converted price: $" + data.formattedConvertedPrice + "<br>GDP/capita: $" + data.gdp.toFixed(2) + "</div>";
             }
         }
         function getTrendlineData(data, chart){
