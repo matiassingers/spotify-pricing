@@ -372,7 +372,6 @@
             var sortedDifferences = _.map(_.sortBy(countries, 'priceDifference'), function(country){
                 return country.priceDifference;
             });
-            console.log(sortedDifferences);
             var quantile = [
                 d3.quantile(sortedDifferences, 0.2),
                 d3.quantile(sortedDifferences, 0.4),
