@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
 <title>Spotify Pricing Index</title>
 <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
 <link href='css/bootstrap.css' rel='stylesheet' type='text/css'>
@@ -24,6 +25,9 @@
         font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
         color: #FFF;
     }
+    .container {
+        overflow-x: hidden;
+    }
 
     p {
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -31,9 +35,14 @@
     }
 
     h1 {
-        font-size: 50px;
+        font-size: 30px;
         line-height: 1;
         text-align: center;
+    }
+    @media(min-width:768px){
+        h1 {
+            font-size: 50px;
+        }
     }
 
     .bar, circle {
@@ -88,22 +97,44 @@
     .datamaps-legend {
         z-index: 1001;
         position: absolute;
-        bottom: 50px;
-        left: 15px;
+        bottom: 5px;
+        left: 0;
+    }
+    @media(min-width:768px){
+        .datamaps-legend {
+            bottom: 50px;
+            left: 15px;
+        }
+    }
+    .datamaps-legend dl {
+        margin: 0;
     }
     .datamaps-legend dt, .datamaps-legend dd {
         float: left;
     }
     .datamaps-legend dd {
-        width: 20px;
+        width: 10px;
+        line-height: 10px;
+    }
+    @media(min-width:768px){
+        .datamaps-legend dd {
+            width: 20px;
+            line-height: 20px;
+        }
     }
     .datamaps-legend dt {
         display: none;
     }
     .datamaps-legend dl:before, .datamaps-legend dl:after {
         float: left;
+        font-size: 8px;
     }
-    .datamaps-legend dl:before, .datamaps-legend dl:after {
+    @media(min-width:768px) {
+        .datamaps-legend dl:before, .datamaps-legend dl:after {
+            font-size: 14px;
+        }
+    }
+    .datamaps-legend dl:before {
         content: "$";
         padding-right: 5px;
     }
