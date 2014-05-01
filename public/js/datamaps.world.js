@@ -583,7 +583,12 @@
         //if it's an object, overriding the previous data
         if ( subunitData === Object(subunitData) ) {
           this.options.data[subunit] = defaults(subunitData, this.options.data[subunit] || {});
-          var geo = this.svg.select('.' + subunit).attr('data-info', JSON.stringify(this.options.data[subunit]));
+          var singleData = this.options.data[subunit];
+
+          var element = this.svg.select('.' + subunit);
+          var geo = element.attr('data-info', JSON.stringify(singleData));
+
+          element.attr('class', 'datamaps-subunit ' + subunit + ' ' + singleData.region.toLowerCase() + ' ' + subunit.toLowerCase());
         }
         svg
           .selectAll('.' + subunit)
