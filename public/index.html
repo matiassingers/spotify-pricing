@@ -308,7 +308,7 @@
                         if(!data)
                             return;
 
-                        return '<div class="hoverinfo"><strong>' + data.internationalName + ':</strong> $' + data.convertedPrice + '</div>';
+                        return '<div class="hoverinfo"><strong>' + data.internationalName + ':</strong> $' + data.convertedPrice + '<br>Local price: ' + data.currency + ' ' + data.price + '</div>';
                     },
                     popupOnHover: true,
                     highlightOnHover: true,
@@ -341,7 +341,9 @@
                     fillKey: calculateColor(country.priceDifference),
                     internationalName: country.internationalName,
                     priceDifference: country.formattedPriceDifference,
-                    convertedPrice: country.formattedConvertedPrice
+                    convertedPrice: country.formattedConvertedPrice,
+                    price: country.price,
+                    currency: country.currency
                 };
             });
             setTimeout(function(){
