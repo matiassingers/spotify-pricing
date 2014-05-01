@@ -251,7 +251,9 @@
             httpRequest.open('GET', path);
             httpRequest.send();
         }
-        fetchJSONFile('/api/', formatData);
+
+        // fetchJSONFile('/api/', formatData);
+        fetchJSONFile('/data/countries.json', formatData);
 
         function formatData(data){
             countries = data;
