@@ -224,7 +224,7 @@
     }
 
     /* Country filtering */
-    svg.filter .bar {
+    svg.filter .bar, svg.filter path {
         opacity: 0.2
     }
 
@@ -387,7 +387,8 @@
                     priceDifference: country.formattedPriceDifference,
                     convertedPrice: country.formattedConvertedPrice,
                     price: country.price,
-                    currency: country.currency
+                    currency: country.currency,
+                    region: country.region
                 };
             });
             setTimeout(function(){
@@ -671,12 +672,15 @@
 
                     var chart = d3.select("#bar-chart svg");
                     var scatter = d3.select("#scatter-plot svg");
+                    var map = d3.select("#map svg");
                     if(id === 1){
                         chart.attr("class", "");
                         scatter.attr("class", "");
+                        map.attr("class", "");
                     } else {
                         chart.attr("class", "filter " + element.text().toLowerCase());
                         scatter.attr("class", "filter " + element.text().toLowerCase());
+                        map.attr("class", "filter " + element.text().toLowerCase());
                     }
                 });
     </script>
