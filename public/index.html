@@ -417,16 +417,27 @@
         function drawScatterPlot(){
             if(width < 400)
                 return;
+
+            var scatterWidth = {
+                inner: width,
+                outer: width + margin.right + margin.left
+            };
+            var scatterHeight = {
+                inner: height / 4,
+                outer: height / 4 + margin.top + margin.bottom
+            };
+
+            console.log(height);
             
             var data = _.remove(countries, function(country) { return !!country.gdp; });
 
             var x = d3.scale.linear()
                     .domain([0, d3.max(data, function(d) { return d.gdp; })]).nice()
-                    .range([margin.left, width + margin.right]);
+                    .range([margin.left, scatterWidth.inner + margin.right]);
 
             var y = d3.scale.linear()
                     .domain([0, d3.max(data, function(d) { return d.convertedPrice; })]).nice()
-                    .range([ height/2, margin.top ]);
+                    .range([ scatterHeight.inner, margin.top ]);
 
             var scatterContainer = container.append("div")
                     .attr("id", "scatter-plot")
@@ -437,14 +448,14 @@
                     .attr('class', 'scatter-hover');
 
             var chart = scatterContainer.append('svg:svg')
-                    .attr('width', width + margin.right + margin.left)
-                    .attr('height', height/2 + margin.top + margin.bottom)
+                    .attr('width', scatterWidth.outer)
+                    .attr('height', scatterHeight.outer)
                     .attr('class', 'chart')
                     .attr('style', 'position: relative');
 
             var main = chart.append('g')
-                    .attr('width', width)
-                    .attr('height', height/2)
+                    .attr('width', scatterWidth.inner)
+                    .attr('height', scatterHeight.inner)
 
             // draw the x axis
             var xAxis = d3.svg.axis()
@@ -452,7 +463,7 @@
                     .orient('bottom');
 
             main.append('g')
-                    .attr('transform', 'translate(0,' + height/2 + ')')
+                    .attr('transform', 'translate(0,' + scatterHeight.inner + ')')
                     .attr('class', 'main axis date')
                     .call(xAxis);
 
