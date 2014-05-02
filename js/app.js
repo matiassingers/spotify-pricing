@@ -351,11 +351,12 @@ function drawScatterPlot(){
     var leftPosition = position[0] + 10;
 
     var hoverElement = scatterContainer.select('.scatter-hover')
-      .style('top', "{0}px".format(position[1] + 15))
       .html(function() { return scatterPopupHTML(data); })
+      .style('top', "{0}px".format(position[1] + 15))
       .style('left', "{0}px".format(leftPosition))
       .style('display', 'block');
 
+    // Handle Luxembourg edge-case
     if(data.countryCode === 'LUX') {
       var hoverElementWidth = document.getElementsByClassName('scatter-hover')[0].offsetWidth;
       leftPosition = leftPosition - hoverElementWidth - 80;
@@ -419,25 +420,28 @@ function calculateWidth(){
 
 
 d3.selectAll(".continent-chooser h3")
-  .on('click', function(d, id){
-    d3.selectAll(".continent-chooser h3.active")
-      .classed("active", false);
+  .on('click', filterContinents);
 
-    var element = d3.select(this)
-      .classed("active", true);
+function filterContinents(d, id) {
+  // Remove .active from currently selected continent
+  d3.selectAll(".continent-chooser h3.active")
+    .classed("active", false);
 
-    var charts = [
-      "#bar-chart svg",
-      "#scatter-plot svg",
-      "#map svg"
-    ];
+  // Set .active for clicked continent
+  var element = d3.select(this)
+    .classed("active", true);
 
-    _.each(charts, function(item){
-      var chart = d3.select(item);
+  var charts = [
+    "#bar-chart svg",
+    "#scatter-plot svg",
+    "#map svg"
+  ];
+  _.each(charts, function(item) {
+    var chart = d3.select(item);
 
-      if(id === 0)
-        return chart.attr("class", "");
+    if(id === 0)
+      return chart.attr("class", "");
 
-      chart.attr("class", "filter {0}".format(element.text().toLowerCase()));
-    });
+    chart.attr("class", "filter {0}".format(element.text().toLowerCase()));
   });
+}
