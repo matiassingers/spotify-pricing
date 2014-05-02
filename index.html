@@ -29,11 +29,19 @@
         overflow-x: hidden;
     }
 
-    p {
+    p, small {
         color: rgb(136, 137, 140);
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-weight: 200;
         font-size: 12px;
+    }
+
+    small {
+        display: inline-block;
+        width: 100%;
+        padding-top: 8px;
+        font-size: 85%;
+        text-align: center;
     }
 
     h1 {
@@ -608,6 +616,9 @@
                     .attr("y1", function(d) { return y(d[1]); })
                     .attr("x2", function(d) { return x(d[2]); })
                     .attr("y2", function(d) { return y(d[3]); });
+
+            scatterContainer.append("small")
+                    .text("GDP per capita, PPP (current international $) 2009, World Bank");
 
             function updateScatterPopup(){
                 var position = d3.mouse(this);
