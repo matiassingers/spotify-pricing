@@ -1,0 +1,249 @@
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Montserrat-Regular'), url('../fonts/montserrat-normal.woff') format('woff');
+}
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Montserrat-Bold'), url('../fonts/montserrat-bold.woff') format('woff');
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(18,19,20);
+    font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #FFF;
+}
+.container {
+    overflow-x: hidden;
+}
+
+h1 {
+    font-size: 30px;
+    line-height: 1;
+    text-align: center;
+}
+@media(min-width:768px){
+    h1 {
+        font-size: 50px;
+    }
+}
+
+h2, h3 {
+    margin: 0;
+    padding-bottom: 10px;
+    color: rgb(136, 137, 140);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 200;
+    text-transform: uppercase;
+}
+
+p, small {
+    color: rgb(136, 137, 140);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 200;
+    font-size: 12px;
+}
+
+small {
+    display: inline-block;
+    width: 100%;
+    padding-top: 8px;
+    font-size: 85%;
+    text-align: center;
+}
+
+
+/* SVG element styling */
+text {
+    fill: rgb(136, 137, 140);
+    font-size: 12px;
+    font-weight: 100;
+    text-transform: uppercase;
+}
+
+.bar, circle {
+    fill: rgba(133, 187, 35, 1);
+}
+
+.bar:hover, .bar:focus, circle:hover, .circle:focus {
+    fill: rgb(15, 118, 143);
+}
+
+.bar:hover text, .bar:focus text {
+    fill: white;
+}
+
+.axis text {
+    font-size: 10px;
+}
+
+.axis path, .axis line {
+    fill: none;
+}
+
+.axis line {
+    stroke: rgb(34, 35, 38);
+    shape-rendering: crispEdges;
+}
+
+.axis.y line {
+    stroke: rgb(145, 43, 13);
+}
+
+text.label {
+    font-weight: 100;
+}
+
+text.nil {
+    font-family: serif;
+    font-style: italic;
+    font-weight: normal;
+    text-transform: none;
+}
+
+text.price {
+    font-family: monospace;
+    text-anchor: end;
+}
+
+/* Map styling */
+.datamap path {
+    stroke: #FFFFFF;
+    stroke-width: 1px;
+}
+
+.datamaps-legend {
+    z-index: 1001;
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+}
+@media(min-width:768px){
+    .datamaps-legend {
+        bottom: 50px;
+        left: 15px;
+    }
+}
+.datamaps-legend dl {
+    margin: 0;
+}
+.datamaps-legend dt, .datamaps-legend dd {
+    float: left;
+}
+.datamaps-legend dd {
+    width: 10px;
+    line-height: 10px;
+}
+@media(min-width:768px){
+    .datamaps-legend dd {
+        width: 20px;
+        line-height: 20px;
+    }
+}
+.datamaps-legend dt {
+    display: none;
+}
+.datamaps-legend dl:before, .datamaps-legend dl:after {
+    float: left;
+    font-size: 8px;
+}
+@media(min-width:768px) {
+    .datamaps-legend dl:before, .datamaps-legend dl:after {
+        font-size: 14px;
+    }
+}
+.datamaps-legend dl:before {
+    content: "$";
+    padding-right: 5px;
+}
+.datamaps-legend dl:after {
+    content: "$$$";
+    padding-left: 5px;
+}
+
+.datamaps-hoverover {
+    display: none;
+}
+.hoverinfo {
+    padding: 4px;
+    background-color: rgb(62, 62, 62);
+    font-size: 12px;
+    color: #bbb;
+    border: 1px solid rgb(19, 19, 21);
+}
+
+/* Scatter-plot */
+line.trendline {
+    stroke: rgb(145, 43, 13);
+    stroke-width: 2;
+}
+.scatter-hover {
+    position: absolute;
+    z-index: 1000;
+}
+@media(max-width:767px) {
+    #scatter-plot{
+        display: none;
+    }
+}
+
+/* Continent chooser/filtering */
+h2, .continent-chooser {
+    margin-bottom: 5px;
+    border-bottom: 1px solid rgb(34, 35, 38);
+}
+
+.continent-chooser {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.continent-chooser h3 {
+    display: inline-block;
+    padding: 0 10px 10px;
+    cursor: pointer;
+}
+
+@media(max-width:767px){
+    .continent-chooser h3 {
+        padding: 0 2px 10px;
+    }
+}
+
+.continent-chooser h3.active {
+    border-bottom: 2px solid rgb(132, 189, 0);
+}
+
+svg.filter .bar, svg.filter path {
+    opacity: 0.2
+}
+
+svg.filter.europe .europe, svg.filter.americas .americas, svg.filter.asia .asia, svg.filter.oceania .oceania {
+    opacity: 1;
+}
+
+/* Default styling for chart containers */
+.chart {
+    position: relative;
+    width: auto;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    /* border-bottom: 1px solid rgb(34, 35, 38); */
+}
+@media(min-width:768px) {
+    margin-bottom: 50px;
+    padding-bottom: 25px;
+}
+
+/* GitHub fork me ribbon */
+@media(max-width:767px){
+    .github-fork {
+        display: none;
+    }
+}
