@@ -63,7 +63,7 @@ function formatData(data){
       country.formattedConvertedPrice = (Math.round(country.convertedPrice * 100) / 100).toFixed(2);
 
       country.class = country.priceDifference < 0 ? "bar negative" : "bar positive";
-      country.class = country.class + ' ' + country.region.toLowerCase() + ' ' + country.countryCode.toLowerCase();
+      country.class = "{0} {1} {2}".format(country.class, country.region.toLowerCase(), country.countryCode.toLowerCase());
 
       return country;
     })
@@ -99,7 +99,7 @@ function drawMap(){
         if(!data)
           return;
 
-        return '<div class="hoverinfo"><strong>' + data.internationalName + ':</strong> $' + data.convertedPrice + '<br>Local price: ' + data.currency + ' ' + data.price + '</div>';
+        return '<div class="hoverinfo"><strong>{0}:</strong> ${1}<br>Local price: {2} {3}</div>'.format(data.internationalName, data.convertedPrice, data.currency, data.price);
       },
       popupOnHover: true,
       highlightOnHover: true,
@@ -164,6 +164,7 @@ function updateMapColors(map){
 
 function drawBarChart(){
   var container = d3.select("#bar-chart");
+  var outerWidth = width + margin.left + margin.right;
 
   var x = d3.scale.linear()
     .range([margin.left, width + margin.left])
@@ -181,7 +182,7 @@ function drawBarChart(){
     .html("Local currency under/over valuation against the dollar, %");
 
   var svg = container.append("svg")
-    .attr("width", width + margin.left + margin.right)
+    .attr("width", outerWidth)
     .attr("height", height + margin.top + margin.bottom);
 
   x.domain(d3.extent(countries, function(d) { return d.priceDifference; })).nice();
@@ -216,32 +217,32 @@ function drawBarChart(){
     .attr("y", function(d) { return y(d.internationalName); })
     .attr("text-anchor", "left")
     .text(function(d) { return d.internationalName; });
-  labels.attr("transform", function(d) { return "translate(0, " + (y.rangeBand()/2 + getBoundaryHeight(labels)/4) + ")"; });
+  labels.attr("transform", function(d) { return "translate(0, {0})".format(getYPosition(labels)); });
 
-  var nil = svg.selectAll("g.bar." + base.countryCode.toLowerCase())
+  var nil = svg.selectAll("g.bar.{0}".format(base.countryCode.toLowerCase()))
     .append("svg:text")
     .attr("class", "nil")
     .attr("x", x(0))
     .attr("y", y(base.internationalName))
     .text("nil");
-  nil.attr("transform", function(d) { return "translate(2, " + (y.rangeBand()/2 + getBoundaryHeight(nil)/4) + ")"; });
+  nil.attr("transform", function(d) { return "translate(2, {0})".format(getYPosition(nil)); });
 
   var prices = bars.append("svg:text")
     .attr("class", "price")
-    .attr("x", width + margin.left + margin.right)
+    .attr("x", outerWidth)
     .attr("y", function(d) { return y(d.internationalName); })
     .text(function(d) {
       return d.formattedConvertedPrice;
     });
-  prices.attr("transform", function(d) { return "translate(0, " + (y.rangeBand()/2 + getBoundaryHeight(prices)/4) + ")"; });
+  prices.attr("transform", function(d) { return "translate(0, {0})".format(getYPosition(prices)); });
 
   var priceDefinition = svg.append("svg:text")
     .attr("class", "price-definition visible-md visible-lg")
-    .attr("x", width + margin.left + margin.right)
+    .attr("x", outerWidth)
     .attr("y", height)
     .attr("text-anchor", "left")
     .text("Spotify Premium price, $");
-  priceDefinition.attr("transform", function(d) { return "translate(-" + (getBoundaryWidth(priceDefinition) + margin.right/2) + ", -" + (getBoundaryHeight(priceDefinition) - 2) + ")"; });
+  priceDefinition.attr("transform", function(d) { return "translate(-{0}, -{1})".format((getBoundaryWidth(priceDefinition) + margin.right/2), (getBoundaryHeight(priceDefinition) - 2)); });
 
   function getBoundaryHeight(elements){
     return elements.node().getBBox().height;
@@ -249,9 +250,13 @@ function drawBarChart(){
   function getBoundaryWidth(elements){
     return elements.node().getBBox().width;
   }
+  function getYPosition(elements){
+    return y.rangeBand() / 2 + getBoundaryHeight(elements) / 4;
+  }
 };
 
 function drawScatterPlot(){
+  // Don't draw the scatterPlot on mobile devices
   if(width < 400)
     return;
 
@@ -298,7 +303,7 @@ function drawScatterPlot(){
     .orient('bottom');
 
   chart.append('g')
-    .attr('transform', 'translate(0,' + scatterHeight.inner + ')')
+    .attr('transform', 'translate(0, {0})'.format(scatterHeight.inner))
     .attr('class', 'main axis date')
     .call(xAxis);
 
@@ -308,7 +313,7 @@ function drawScatterPlot(){
     .orient('left');
 
   chart.append('g')
-    .attr('transform', 'translate(' + margin.left + ', 0)')
+    .attr('transform', 'translate({0}, 0)'.format(margin.left))
     .attr('class', 'main axis date')
     .call(yAxis);
 
@@ -345,14 +350,16 @@ function drawScatterPlot(){
 
     var leftPosition = position[0] + 10;
 
-    var hoverElement = scatterContainer.select('.scatter-hover').style('top', ( (position[1] + 15)) + "px").html(function() {
-      return scatterPopupHTML(data);
-    }).style('left', leftPosition + "px").style('display', 'block');
+    var hoverElement = scatterContainer.select('.scatter-hover')
+      .style('top', "{0}px".format(position[1] + 15))
+      .html(function() { return scatterPopupHTML(data); })
+      .style('left', "{0}px".format(leftPosition))
+      .style('display', 'block');
 
     if(data.countryCode === 'LUX') {
       var hoverElementWidth = document.getElementsByClassName('scatter-hover')[0].offsetWidth;
       leftPosition = leftPosition - hoverElementWidth - 80;
-      hoverElement.style('left', leftPosition + 'px');
+      hoverElement.style('left', '{0}px'.format(leftPosition));
     }
   }
   function removeScatterPopup(){
@@ -360,7 +367,7 @@ function drawScatterPlot(){
       .style('display', 'none');
   }
   function scatterPopupHTML(data){
-    return "<div class='hoverinfo'><strong>" + data.internationalName + ":</strong><br>Converted price: $" + data.formattedConvertedPrice + "<br>GDP/capita: $" + data.gdp.toFixed(2) + "</div>";
+    return "<div class='hoverinfo'><strong>{0}:</strong><br>Converted price: ${1}<br>GDP/capita: ${2}</div>".format(data.internationalName, data.formattedConvertedPrice, data.gdp.toFixed(2));
   }
 }
 function getTrendlineData(data, chart){
@@ -431,6 +438,6 @@ d3.selectAll(".continent-chooser h3")
       if(id === 0)
         return chart.attr("class", "");
 
-      chart.attr("class", "filter " + element.text().toLowerCase());
+      chart.attr("class", "filter {0}".format(element.text().toLowerCase()));
     });
   });
