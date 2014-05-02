@@ -4,24 +4,12 @@ var core = require('./core/base');
 var settings = core.settings;
 
 var app = express();
-app.set('views', __dirname + '/views');
-app.use(express.static(__dirname + '/public'));
-app.set('view engine', 'jade');
+app.use(express.static(__dirname + '/'));
 
 app.get('/api/', function(req, res){
   res.set({'content-type': 'application/json; charset=utf-8'});
   getItems(function(items){
     res.send(items);
-  });
-});
-
-app.get('/', function(req, res){
-  getItems(function(items){
-    res.render('index',
-      {
-        data : items
-      }
-    )
   });
 });
 
