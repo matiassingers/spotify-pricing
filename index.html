@@ -612,15 +612,19 @@
             function updateScatterPopup(){
                 var position = d3.mouse(this);
                 var element = d3.select(this);
+                var data = JSON.parse(element.attr('data-info'));
 
-                scatterContainer.select('.scatter-hover')
-                        .style('top', ( (position[1] + 15)) + "px")
-                        .html(function() {
-                            var data = JSON.parse(element.attr('data-info'));
+                var leftPosition = position[0] + 10;
+
+                var hoverElement = scatterContainer.select('.scatter-hover').style('top', ( (position[1] + 15)) + "px").html(function() {
                             return scatterPopupHTML(data);
-                        })
-                        .style('left', ( position[0] + 10) + "px")
-                        .style('display', 'block');
+                        }).style('left', leftPosition + "px").style('display', 'block');
+
+                if(data.countryCode === 'LUX') {
+                    var hoverElementWidth = document.getElementsByClassName('scatter-hover')[0].offsetWidth;
+                    leftPosition = leftPosition - hoverElementWidth - 80;
+                    hoverElement.style('left', leftPosition + 'px');
+                }
             }
             function removeScatterPopup(){
                 scatterContainer.select('.scatter-hover')
