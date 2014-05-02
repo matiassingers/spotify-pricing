@@ -138,7 +138,7 @@
 
     text.price {
         font-family: monospace;
-        text-align: right;
+        text-anchor: end;
     }
 
     /* Map styling */
@@ -502,14 +502,10 @@
                     .attr("class", "price")
                     .attr("x", width + margin.left + margin.right)
                     .attr("y", function(d) { return y(d.internationalName); })
-                    .html(function(d) {
-                        if(d.formattedConvertedPrice.length === 4) {
-                            var price = "&nbsp;" + d.formattedConvertedPrice;
-                        }
-
-                        return price || d.formattedConvertedPrice;
+                    .text(function(d) {
+                        return d.formattedConvertedPrice;
                     });
-            prices.attr("transform", function(d) { return "translate(-" + getBoundaryWidth(prices) + ", " + (y.rangeBand()/2 + getBoundaryHeight(prices)/4) + ")"; });
+            prices.attr("transform", function(d) { return "translate(0, " + (y.rangeBand()/2 + getBoundaryHeight(prices)/4) + ")"; });
 
             var priceDefinition = svg.append("svg:text")
                     .attr("class", "price-definition visible-md visible-lg")
