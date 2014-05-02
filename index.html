@@ -68,9 +68,21 @@
         cursor: pointer;
     }
 
+    @media(max-width:767px){
+        .country-chooser h3 {
+            padding: 0 2px 10px;
+        }
+    }
+
     .country-chooser h3:first-child {
+        width: 100%;
         padding-left: 0;
         cursor: auto;
+    }
+    @media(min-width:768px){
+        .country-chooser h3:first-child {
+            width: auto;
+        }
     }
 
     .country-chooser h3.active {
