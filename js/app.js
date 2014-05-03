@@ -218,7 +218,6 @@ function drawBarChart(){
     .attr("y", function(d) { return y(d.internationalName); })
     .attr("text-anchor", "left")
     .text(function(d) { return d.internationalName; });
-  labels.attr("transform", function(d) { return "translate(0, {0})".format(getYPosition(labels)); });
 
   var nil = svg.selectAll("g.bar.{0}".format(base.countryCode.toLowerCase()))
     .append("svg:text")
@@ -226,7 +225,6 @@ function drawBarChart(){
     .attr("x", x(0))
     .attr("y", y(base.internationalName))
     .text("nil");
-  nil.attr("transform", function(d) { return "translate(2, {0})".format(getYPosition(nil)); });
 
   var prices = bars.append("svg:text")
     .attr("class", "price")
@@ -235,7 +233,6 @@ function drawBarChart(){
     .text(function(d) {
       return d.formattedConvertedPrice;
     });
-  prices.attr("transform", function(d) { return "translate(0, {0})".format(getYPosition(prices)); });
 
   var priceDefinition = svg.append("svg:text")
     .attr("class", "price-definition visible-md visible-lg")
@@ -243,6 +240,10 @@ function drawBarChart(){
     .attr("y", height)
     .attr("text-anchor", "left")
     .text("Spotify Premium price, $");
+
+  labels.attr("transform", function(d) { return "translate(0, {0})".format(getYPosition(labels)); });
+  nil.attr("transform", function(d) { return "translate(2, {0})".format(getYPosition(nil)); });
+  prices.attr("transform", function(d) { return "translate(0, {0})".format(getYPosition(prices)); });
   priceDefinition.attr("transform", function(d) { return "translate(-{0}, -{1})".format((getBoundaryWidth(priceDefinition) + margin.right/2), (getBoundaryHeight(priceDefinition) - 2)); });
 
   function getBoundaryHeight(elements){
