@@ -447,3 +447,43 @@ function filterContinents(d, id) {
     chart.attr("class", "filter {0}".format(element.text().toLowerCase()));
   });
 }
+
+// Horrible way to handle resizing of the viewport, but it kind of works
+var resizing = false;
+d3.select(window).on('resize', function(){
+  if(resizing !== false)
+      clearTimeout(resizing);
+  resizing = setTimeout(redrawCharts, 100);
+});
+
+function redrawCharts(){
+  var mapWidth = parseInt(mapElement.style('width'));
+
+  margin = {top: 10, right: 75, bottom: 10, left: 150};
+  width = mapWidth;
+  width = width - margin.left - margin.right;
+  height = width * mapRatio - margin.top - margin.bottom;
+
+  if(height < 500) {
+    margin.left = 75;
+    margin.right = 40;
+    width = mapWidth - margin.left - margin.right;
+    height = 650;
+  }
+
+  d3.select('#map svg').remove();
+  d3.select('#map div').remove();
+  mapElement.style("height",  calculateHeight() + "px" );
+  drawMap();
+
+  d3.select('#bar-chart p').remove();
+  d3.select('#bar-chart svg').remove();
+  drawBarChart();
+
+  if(width > 400){
+    d3.select('#scatter-plot svg').remove();
+    d3.select('#scatter-plot small').remove();
+    d3.select('#scatter-plot div').remove();
+    drawScatterPlot();
+  }
+};
