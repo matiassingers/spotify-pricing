@@ -278,7 +278,7 @@ function drawScatterPlot(){
     left: 25
   };
 
-  var data = _.remove(countries, function(country) { return !!country.gdp; });
+  var data = _.filter(countries, function(country) { return !!country.gdp; });
 
   var x = d3.scale.linear()
     .domain([0, d3.max(data, function(d) { return d.gdp; })]).nice()
