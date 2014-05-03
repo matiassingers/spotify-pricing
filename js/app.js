@@ -15,17 +15,18 @@ var container = d3.select(".container");
 var mapElement = d3.select("#map")
   .style("height",  calculateHeight() + "px" );
 
+var mapWidth = parseInt(mapElement.style('width'));
+
 var margin = {top: 10, right: 75, bottom: 10, left: 150},
-  width = parseInt(mapElement.style('width')),
+  width = mapWidth,
   width = width - margin.left - margin.right,
   mapRatio = 1.5,
   height = width * mapRatio - margin.top - margin.bottom;
 
 if(height < 500) {
-  console.log(margin);
   margin.left = 75;
   margin.right = 40;
-  width = parseInt(mapElement.style('width')) - margin.left - margin.right;
+  width = mapWidth - margin.left - margin.right;
   height = 650;
 }
 
