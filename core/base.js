@@ -7,8 +7,13 @@ String.prototype.format = function () {
   return formatted;
 };
 
+var mongoose = require('mongoose');
+var core = require('../core/base');
 var settings = require('./settings');
 
+mongoose.connect(settings.mongo);
+
 module.exports = {
-  settings: settings
+  settings: settings,
+  mongoose: mongoose
 };

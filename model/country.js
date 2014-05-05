@@ -1,8 +1,6 @@
-var mongoose = require('mongoose');
 var core = require('../core/base');
-var settings = core.settings;
+var mongoose = core.mongoose;
 
-mongoose.connect(settings.mongo);
 var Country = mongoose.model('Country', {
   title: String,
   link: String,
