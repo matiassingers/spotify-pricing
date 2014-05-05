@@ -241,6 +241,9 @@ function drawBarChart(){
     .attr("text-anchor", "left")
     .text("Spotify Premium price, $");
 
+  container.append("small")
+    .text("US Dollar market exchange rate, May 2014");
+
   labels.attr("transform", function(d) { return "translate(0, {0})".format(getYPosition(labels)); });
   nil.attr("transform", function(d) { return "translate(2, {0})".format(getYPosition(nil)); });
   prices.attr("transform", function(d) { return "translate(0, {0})".format(getYPosition(prices)); });
