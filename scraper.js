@@ -4,11 +4,13 @@ var spotify = require('spotify-crawler');
 var request = require('promise-request');
 
 var Country = require('./model/country');
+var Update = require('./model/update');
 
 
 spotify.fetch()
   .then(getGDPData)
   .then(saveCountries)
+  .then(updateTime)
   .catch(console.log);
 
 
@@ -39,7 +41,15 @@ function saveCountries(countries){
   var save = Country.create(countries)
     .then(function(){
       console.log('yay success!!');
-    })
+    });
+
+  return save;
+}
+
+function updateTime(){
+  var record = new Update();
+
+  record.save();
 }
 
 function saveCountry(country){
