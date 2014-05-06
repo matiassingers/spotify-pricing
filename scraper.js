@@ -15,8 +15,8 @@ spotify.fetch()
 
 
 function getGDPData(countries){
-  // GDP per capita, PPP (current international $) - 2008
-  var url = "http://api.worldbank.org/countries/all/indicators/NY.GDP.PCAP.PP.CD?format=json&date=2009:2009&per_page=300";
+  // GDP per capita, PPP (current international $) - 2012
+  var url = "http://api.worldbank.org/countries/all/indicators/NY.GDP.PCAP.PP.CD?format=json&date=2012:2012&per_page=300";
 
   return request(url, true)
     .then(function(data){
