@@ -117,9 +117,7 @@ function drawMap(){
   map.legend();
 }
 function updateMapColors(map){
-  var sortedDifferences = _.map(_.sortBy(countries, 'priceDifference'), function(country){
-    return country.priceDifference;
-  });
+  var sortedDifferences = _.map(_.sortBy(countries, 'priceDifference'), 'priceDifference');
   var quantile = [
     d3.quantile(sortedDifferences, 0.2),
     d3.quantile(sortedDifferences, 0.4),
