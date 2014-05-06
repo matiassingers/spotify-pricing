@@ -434,6 +434,8 @@ function filterContinents(d, id) {
   var element = d3.select(this)
     .classed("active", true);
 
+  ga('send', 'event', 'filter', 'continents', element.text().toLowerCase());
+
   var charts = [
     "#bar-chart svg",
     "#scatter-plot svg",
