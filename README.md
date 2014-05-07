@@ -2,10 +2,10 @@
 
 Check out the end result here: <http://mts.io/projects/spotify-pricing/>
 
-I wrote a small blog documenting how I did this projejct: <http://mts.io/2014/05/08/spotify-pricing-index/>
+I wrote a blog post about the project: <http://mts.io/2014/05/08/spotify-pricing-index/>
 
------
 
+### dependencies
 Pricing data was scraped using my own little Node.js crawler: [spotify-crawler](https://github.com/matiassingers/spotify-crawler)
 
 Thanks to the following libraries:
