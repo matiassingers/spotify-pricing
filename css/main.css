@@ -6,6 +6,7 @@ html, body {
     color: #FFF;
 }
 .container {
+    position: relative;
     overflow-x: hidden;
 }
 
@@ -233,4 +234,24 @@ svg.filter.europe .europe, svg.filter.americas .americas, svg.filter.asia .asia,
     .github-fork {
         display: none;
     }
+}
+
+.blog-link {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+    font-weight: 500;
+}
+
+.blog-link a {
+    color: rgb(136, 137, 140);
+}
+
+.blog-link:before {
+    content: "← ";
+    line-height: 0;
+    display: inline-block;
+    height: 0;
+    margin-right: 8px;
+    font-size: 18px;
 }
