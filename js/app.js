@@ -240,7 +240,7 @@ function drawBarChart(){
     .text("Spotify Premium price, $");
 
   container.append("small")
-    .text("US Dollar market exchange rate, May 2014");
+    .text("Source: US Dollar market exchange rate, May 2014");
 
   labels.attr("transform", function(d) { return "translate(0, {0})".format(getYPosition(labels)); });
   nil.attr("transform", function(d) { return "translate(2, {0})".format(getYPosition(nil)); });
@@ -344,7 +344,7 @@ function drawScatterPlot(){
     .attr("y2", function(d) { return y(d[3]); });
 
   scatterContainer.append("small")
-    .text("GDP per capita, PPP (current international $) 2009, World Bank");
+    .text("Source: GDP per capita PPP (current international $), 2012 World Bank");
 
   function updateScatterPopup(){
     var position = d3.mouse(this);
@@ -480,6 +480,7 @@ function redrawCharts(){
   drawMap();
 
   d3.select('#bar-chart p').remove();
+  d3.select('#bar-chart small').remove();
   d3.select('#bar-chart svg').remove();
   drawBarChart();
 
