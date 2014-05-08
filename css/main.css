@@ -225,8 +225,10 @@ svg.filter.europe .europe, svg.filter.americas .americas, svg.filter.asia .asia,
     /* border-bottom: 1px solid rgb(34, 35, 38); */
 }
 @media(min-width:768px) {
-    margin-bottom: 50px;
-    padding-bottom: 25px;
+    .chart {
+        margin-bottom: 50px;
+        padding-bottom: 25px;
+    }
 }
 
 /* GitHub fork me ribbon */
