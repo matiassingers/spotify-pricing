@@ -181,11 +181,16 @@ function drawBarChart(){
     .html("Local currency under/over valuation against the dollar, %");
 
   var svg = container.append("svg")
+    .attr("aria-labelledby", "bar-chart-title")
     .attr("width", outerWidth)
     .attr("height", height + margin.top + margin.bottom);
 
   x.domain(d3.extent(countries, function(d) { return d.priceDifference; })).nice();
   y.domain(countries.map(function(d) { return d.internationalName; }));
+
+  svg.append("title")
+    .attr("id", "bar-chart-title")
+    .text("Bar chart with negative values of the converted price index");
 
   svg.append("g")
     .attr("class", "x axis")
@@ -296,9 +301,14 @@ function drawScatterPlot(){
     .attr('class', 'scatter-hover');
 
   var chart = scatterContainer.append('svg:svg')
+    .attr("aria-labelledby", "scatter-plot-title")
     .attr('width', scatterWidth.outer)
     .attr('height', scatterHeight.outer)
     .attr('style', 'position: relative');
+
+  chart.append("title")
+    .attr("id", "scatter-plot-title")
+    .text("Scatter plot graphing the relationship between GDP/capita and the converted price");
 
   // draw the x axis
   var xAxis = d3.svg.axis()
