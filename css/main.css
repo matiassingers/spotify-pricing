@@ -244,6 +244,11 @@ svg.filter.europe .europe, svg.filter.americas .americas, svg.filter.asia .asia,
     left: 10px;
     font-weight: 500;
 }
+@media(max-width:767px){
+    .blog-link {
+        top: 0;
+    }
+}
 
 .blog-link a {
     color: rgb(136, 137, 140);
