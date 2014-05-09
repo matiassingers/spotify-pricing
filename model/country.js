@@ -17,6 +17,7 @@ var Country = mongoose.model('Country', {
   price: Number,
   convertedPrice: Number,
   gdp: Number,
+  catalogSize: Number
 });
 
 module.exports = Country;
